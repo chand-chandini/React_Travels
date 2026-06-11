@@ -17,14 +17,11 @@ If you are developing a production application, we recommend using TypeScript wi
 
 
 
-🚀 New Features to Add
+🚀 New Features Added
 1. Advanced Search & Filtering
 2. Booking Confirmation with PDF Download
-3. Payment Integration (Razorpay/Stripe)
+3. Payment Integration (Razorpay)
 4. Real-time Seat Availability
 5. User Profile & Booking History Dashboard
 6. Review & Rating System
-7. Live Bus Tracking
-8. Email/SMS Notifications
-9. Discount Coupons & Offers
-10. Mobile Number/OTP Verification
+7. Discount Coupons & Offers
