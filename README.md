@@ -24,4 +24,4 @@ If you are developing a production application, we recommend using TypeScript wi
 4. Real-time Seat Availability
 5. User Profile & Booking History Dashboard
 6. Review & Rating System
-7. Discount Coupons & Offers
+7. Discount Coupons & Offers.
