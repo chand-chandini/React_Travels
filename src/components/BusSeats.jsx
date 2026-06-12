@@ -6,6 +6,8 @@ import BookingConfirmation from './BookingConfirmation'
 import RatingStars from './RatingStars'
 import CouponInput from './CouponInput'
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://bus-travel-api.onrender.com/api'
+
 const BusSeats = ({ token }) => {
     const [bus, setBus] = useState(null)
     const [seats, setSeats] = useState([])
@@ -28,7 +30,7 @@ const BusSeats = ({ token }) => {
 
     const fetchBusDetails = async () => {
         try {
-            const response = await axios(`http://localhost:8000/api/buses/${busId}`)
+            const response = await axios(`${API_URL}/buses/${busId}`)
             setBus(response.data)
             setSeats(response.data.seats || [])
             setLoading(false)
@@ -85,7 +87,7 @@ const BusSeats = ({ token }) => {
             const finalAmount = finalPrice
             
             // Step 1: Create booking with authentication header and coupon
-            const bookingResponse = await axios.post("http://localhost:8000/api/booking/",
+            const bookingResponse = await axios.post(`${API_URL}/booking/`,
                 { 
                     seat: selectedSeat,
                     passenger_name: localStorage.getItem('username') || '',
@@ -113,7 +115,7 @@ const BusSeats = ({ token }) => {
             }
             
             // Step 3: Create order with authentication header
-            const orderResponse = await axios.post("http://localhost:8000/api/payments/create-order/",
+            const orderResponse = await axios.post(`${API_URL}/payments/create-order/`,
                 { 
                     booking_id: bookingId, 
                     amount: amount 
@@ -136,7 +138,7 @@ const BusSeats = ({ token }) => {
                 order_id: orderResponse.data.order_id,
                 handler: async (response) => {
                     // Step 5: Verify payment with authentication header
-                    const verifyResponse = await axios.post("http://localhost:8000/api/payments/callback/", 
+                    const verifyResponse = await axios.post(`${API_URL}/payments/callback/`, 
                         response,
                         { 
                             headers: { 
@@ -214,7 +216,7 @@ const BusSeats = ({ token }) => {
 
     const handleRatingSubmit = async () => {
         try {
-            await axios.post(`http://localhost:8000/api/reviews/`, 
+            await axios.post(`${API_URL}/reviews/`, 
                 { bus: busId, rating: userRating, comment: '' },
                 { headers: { 'Authorization': `Token ${token}` } }
             )

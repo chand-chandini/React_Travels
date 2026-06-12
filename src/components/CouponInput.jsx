@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Tag, CheckCircle, XCircle, Percent } from 'lucide-react'
 import axios from 'axios'
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://bus-travel-api.onrender.com/api'
+
 const CouponInput = ({ amount, token, onCouponApplied }) => {
     const [couponCode, setCouponCode] = useState('')
     const [loading, setLoading] = useState(false)
@@ -18,7 +20,7 @@ const CouponInput = ({ amount, token, onCouponApplied }) => {
 
         try {
             const response = await axios.post(
-                'http://localhost:8000/api/validate-coupon/',
+                `${API_URL}/validate-coupon/`,
                 { 
                     code: couponCode,
                     amount: parseFloat(amount) || 0

@@ -3,6 +3,8 @@ import axios from 'axios'
 import { Calendar, Bus, Armchair, Clock, AlertCircle, Ticket, XCircle, DollarSign } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://bus-travel-api.onrender.com/api'
+
 const UserBookings = ({ token, userId }) => {
     const [bookings, setBookings] = useState([])
     const [bookingError, setBookingError] = useState(null)
@@ -22,7 +24,7 @@ const UserBookings = ({ token, userId }) => {
             return
         }
         try {
-            const response = await axios.get(`http://localhost:8000/api/user/${userId}/bookings/`, {
+            const response = await axios.get(`${API_URL}/user/${userId}/bookings/`, {
                 headers: { Authorization: `Token ${token}` }
             })
             setBookings(response.data)
@@ -40,7 +42,7 @@ const UserBookings = ({ token, userId }) => {
         setCancelling(selectedBooking.id)
         try {
             const response = await axios.post(
-                `http://localhost:8000/api/bookings/${selectedBooking.id}/cancel/`,
+                `${API_URL}/bookings/${selectedBooking.id}/cancel/`,
                 { reason: cancelReason },
                 { headers: { Authorization: `Token ${token}` } }
             )

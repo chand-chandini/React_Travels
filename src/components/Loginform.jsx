@@ -3,6 +3,8 @@ import axios from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
 import { LogIn, Mail, Lock, AlertCircle } from 'lucide-react'
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://bus-travel-api.onrender.com/api'
+
 const LoginForm = ({ onLogin }) => {
     const [form, setForm] = useState({
         username: '', password: ''
@@ -20,7 +22,7 @@ const LoginForm = ({ onLogin }) => {
         e.preventDefault()
         setLoading(true)
         try {
-            const response = await axios.post('http://localhost:8000/api/login/', form)
+            const response = await axios.post(`${API_URL}/login/`, form)
             setMessage('Login Successful!')
             
             if (onLogin) {

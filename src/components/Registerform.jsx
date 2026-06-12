@@ -3,6 +3,8 @@ import axios from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
 import { UserPlus, User, Mail, Lock, AlertCircle, CheckCircle } from 'lucide-react'
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://bus-travel-api.onrender.com/api'
+
 const RegisterForm = () => {
     const [form, setForm] = useState({
         username: '', email: '', password: ''
@@ -21,7 +23,7 @@ const RegisterForm = () => {
         e.preventDefault()
         setLoading(true)
         try {
-            await axios.post('http://localhost:8000/api/register/', form);
+            await axios.post(`${API_URL}/register/`, form);
             setMessage("Registration successful! Redirecting to login...")
             setMessageType('success')
             setTimeout(() => {
