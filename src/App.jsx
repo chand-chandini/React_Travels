@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import RegisterForm from './components/RegisterForm';
+import Registerform from './components/Registerform';
 import LoginForm from './components/LoginForm';
 import BusList from './components/BusList';
 import BusSeats from './components/BusSeats';
@@ -43,7 +43,7 @@ const App = () => {
         <Routes>
           {/* Public Routes */}
           <Route path='/' element={<BusList />} />
-          <Route path='/register' element={<RegisterForm />} />
+          <Route path='/register' element={<Registerform />} />
           <Route path='/login' element={<LoginForm onLogin={handleLogin} />} />
           
           {/* Protected Routes - Require Login */}
