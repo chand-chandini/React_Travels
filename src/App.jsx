@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Registerform from './components/Registerform';
-import LoginForm from './components/LoginForm';
+import Loginform from './components/Loginform';
 import BusList from './components/BusList';
 import BusSeats from './components/BusSeats';
 import UserBookings from './components/UserBookings';
@@ -44,7 +44,7 @@ const App = () => {
           {/* Public Routes */}
           <Route path='/' element={<BusList />} />
           <Route path='/register' element={<Registerform />} />
-          <Route path='/login' element={<LoginForm onLogin={handleLogin} />} />
+          <Route path='/login' element={<Loginform onLogin={handleLogin} />} />
           
           {/* Protected Routes - Require Login */}
           <Route path='/bus/:busId' element={
