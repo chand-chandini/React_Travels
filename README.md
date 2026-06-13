@@ -25,3 +25,39 @@ If you are developing a production application, we recommend using TypeScript wi
 5. User Profile & Booking History Dashboard
 6. Review & Rating System
 7. Discount Coupons & Offers.
+
+# 🚌 Bus Travel Booking System
+
+A complete bus ticket booking platform with payment integration, seat selection, and PDF tickets.
+
+## 🌐 Live Demo
+
+**Frontend:** [https://travelsbusbooking.netlify.app](https://travelsbusbooking.netlify.app)
+
+**Backend API:** [https://bus-travel-api.onrender.com](https://bus-travel-api.onrender.com)
+
+## ✨ Features
+
+- ✅ User Authentication (Login/Register)
+- ✅ Search & Filter Buses
+- ✅ Interactive Seat Selection
+- ✅ Razorpay Payment Integration (Test Mode)
+- ✅ Coupon/Discount System
+- ✅ PDF Ticket Download
+- ✅ Cancel Booking with Automatic Refund Calculation
+- ✅ User Dashboard & Booking History
+- ✅ Rating & Review System
+- ✅ Live Chat Support
+- ✅ Fully Responsive Design
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Frontend | React.js, Vite, Tailwind CSS |
+| Backend | Django, Django REST Framework |
+| Database | PostgreSQL |
+| Payment | Razorpay API |
+| Deployment | Netlify (Frontend), Render (Backend) |
+
+## 🧪 Test Payment Card
