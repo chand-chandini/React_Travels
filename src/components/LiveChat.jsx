@@ -19,37 +19,63 @@ const LiveChat = () => {
         { question: "How to contact support?", answer: "You can reach us at support@bustravels.com or call +91-XXXXXXXXXX." }
     ]
 
-    // Send message to Gemini API
-    const sendToGemini = async (userMessage) => {
+    // Send message to Groq API (free, fast, works in browser)
+    const sendToGroq = async (userMessage) => {
+        const apiKey = import.meta.env.VITE_GROQ_API_KEY
+        
+        // Check if API key is available
+        if (!apiKey) {
+            console.error('Groq API key is missing!')
+            return "Sorry, the AI service is not configured. Please contact support or use WhatsApp for help."
+        }
+
         try {
-            const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite-preview-02-05:generateContent', {
+            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'x-goog-api-key': import.meta.env.VITE_GEMINI_API_KEY // Replace with your actual key
+                    'Authorization': `Bearer ${apiKey}`
                 },
                 body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: `You are a bus travel assistant for BusTravels. Help users with:
+                    model: 'llama3-8b-8192',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: `You are a bus travel assistant for BusTravels. Help users with:
                             - Bus routes (Vizag-Hyderabad, Vizag-Rajahmundry, Rajahmundry-Tanuku)
                             - Cancellation and refund policies
                             - Ticket booking and download
                             - Seat changes
                             - Payment methods
                             
-                            Keep answers VERY SHORT and CONCISE (max 2-3 sentences).
-                            
-                            User question: ${userMessage}`
-                        }]
-                    }]
+                            Keep answers VERY SHORT and CONCISE (max 2-3 sentences).`
+                        },
+                        {
+                            role: 'user',
+                            content: userMessage
+                        }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 150
                 })
             })
 
+            if (!response.ok) {
+                const errorData = await response.json()
+                console.error('API Error:', errorData)
+                return "Sorry, I'm having trouble right now. Please try again or contact WhatsApp support."
+            }
+
             const data = await response.json()
-            return data.candidates[0].content.parts[0].text
+            
+            if (data.error) {
+                console.error('API Error:', data.error)
+                return "Sorry, having trouble. Please contact WhatsApp support."
+            }
+            
+            return data.choices[0].message.content
         } catch (error) {
-            console.error('Gemini API error:', error)
+            console.error('AI API error:', error)
             return "Sorry, having trouble connecting. Please try again or contact us on WhatsApp."
         }
     }
@@ -70,8 +96,8 @@ const LiveChat = () => {
         // Show typing indicator
         setIsTyping(true)
         
-        // Get AI response from Gemini
-        const aiReply = await sendToGemini(userMessage.text)
+        // Get AI response from Groq
+        const aiReply = await sendToGroq(userMessage.text)
         
         const botMessage = {
             id: Date.now() + 1,
@@ -120,11 +146,11 @@ const LiveChat = () => {
 
     return (
         <div className={`fixed bottom-4 right-4 bg-white rounded-xl shadow-2xl transition-all duration-300 z-50 ${isMinimized ? 'w-72 h-12' : 'w-80 h-[480px]'}`}>
-            {/* Chat Header - Smaller */}
+            {/* Chat Header */}
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-3 rounded-t-xl flex justify-between items-center">
                 <div>
                     <h3 className="font-bold text-sm">AI Support</h3>
-                    <p className="text-xs text-blue-100">Gemini AI • 24/7</p>
+                    <p className="text-xs text-blue-100">AI Assistant • 24/7</p>
                 </div>
                 <div className="flex space-x-1">
                     <button onClick={() => setShowFAQs(!showFAQs)} className="bg-white/20 hover:bg-white/30 p-1.5 rounded-lg transition-all duration-200" title="FAQ">
@@ -141,7 +167,7 @@ const LiveChat = () => {
 
             {!isMinimized && (
                 <>
-                    {/* Quick Actions - Smaller */}
+                    {/* Quick Actions */}
                     <div className="p-2 bg-gray-50 border-b border-gray-200 flex space-x-1.5">
                         <button onClick={handleWhatsAppChat} className="flex-1 bg-green-500 text-white py-1.5 rounded-md text-xs font-semibold hover:bg-green-600 transition flex items-center justify-center space-x-1">
                             <Zap className="w-3 h-3" />
@@ -157,7 +183,7 @@ const LiveChat = () => {
                         </button>
                     </div>
 
-                    {/* FAQ Section - Smaller */}
+                    {/* FAQ Section */}
                     {showFAQs && (
                         <div className="border-b border-gray-200 max-h-36 overflow-y-auto">
                             <div className="p-2 bg-yellow-50">
@@ -173,7 +199,7 @@ const LiveChat = () => {
                         </div>
                     )}
 
-                    {/* Chat Messages - Smaller height */}
+                    {/* Chat Messages */}
                     <div className="h-72 overflow-y-auto p-3 space-y-2">
                         {/* Welcome Message */}
                         <div className="flex justify-start">
@@ -205,7 +231,7 @@ const LiveChat = () => {
                         )}
                     </div>
 
-                    {/* Chat Input - Smaller */}
+                    {/* Chat Input */}
                     <div className="p-2 border-t border-gray-200">
                         <div className="flex space-x-1.5">
                             <input
@@ -221,7 +247,7 @@ const LiveChat = () => {
                             </button>
                         </div>
                         <p className="text-xs text-gray-400 text-center mt-1">
-                            Powered by Gemini AI
+                            Powered by AI
                         </p>
                     </div>
                 </>
