@@ -197,21 +197,38 @@ const LiveChat = () => {
 
     return (
         <div className={`fixed bottom-6 right-6 bg-white rounded-2xl shadow-2xl transition-all duration-300 z-50 ${isMinimized ? 'w-80 h-14' : 'w-96 h-[560px]'}`}>
-            {/* Chat Header */}
+            {/* Chat Header - FIXED BUTTONS */}
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-t-2xl flex justify-between items-center">
                 <div>
                     <h3 className="font-bold">Customer Support</h3>
                     <p className="text-xs text-blue-100">Online • Usually replies in minutes</p>
                 </div>
                 <div className="flex space-x-2">
-                    <button onClick={() => setShowFAQs(!showFAQs)} className="hover:bg-white/20 p-1 rounded">
-                        <HelpCircle className="w-5 h-5" />
+                    {/* FAQ Button - Question Mark */}
+                    <button 
+                        onClick={() => setShowFAQs(!showFAQs)} 
+                        className="bg-white/20 hover:bg-white/30 p-2 rounded-lg transition-all duration-200"
+                        title="FAQ"
+                    >
+                        <HelpCircle className="w-4 h-4" />
                     </button>
-                    <button onClick={() => setIsMinimized(!isMinimized)} className="hover:bg-white/20 p-1 rounded">
-                        {isMinimized ? <Maximize2 className="w-5 h-5" /> : <Minimize2 className="w-5 h-5" />}
+                    
+                    {/* Minimize Button - Down Arrow/Square */}
+                    <button 
+                        onClick={() => setIsMinimized(!isMinimized)} 
+                        className="bg-white/20 hover:bg-white/30 p-2 rounded-lg transition-all duration-200"
+                        title={isMinimized ? "Expand" : "Minimize"}
+                    >
+                        {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
                     </button>
-                    <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-1 rounded">
-                        <X className="w-5 h-5" />
+                    
+                    {/* Close Button - X mark - NOW VISIBLE with RED background */}
+                    <button 
+                        onClick={() => setIsOpen(false)} 
+                        className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-all duration-200 hover:scale-105"
+                        title="Close chat"
+                    >
+                        <X className="w-4 h-4" />
                     </button>
                 </div>
             </div>
