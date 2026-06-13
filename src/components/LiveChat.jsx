@@ -19,31 +19,116 @@ const LiveChat = () => {
         { question: "How to contact support?", answer: "You can reach us at support@bustravels.com or call +91-XXXXXXXXXX." }
     ]
 
+    const getBusInfo = (from, to, needsAC, needsWater) => {
+    // Sample bus data (you can add more buses)
+    const allBuses = [
+        { name: "Orange Travels AC", time: "06:30 AM", type: "AC", water: true, price: "₹450" },
+        { name: "VRL AC Sleeper", time: "08:15 AM", type: "AC", water: true, price: "₹550" },
+        { name: "SRS Travels", time: "10:00 AM", type: "Non-AC", water: false, price: "₹300" },
+        { name: "KPN AC Volvo", time: "01:30 PM", type: "AC", water: true, price: "₹600" },
+        { name: "Morning Star AC", time: "04:45 PM", type: "AC", water: false, price: "₹480" },
+        { name: "Raj National", time: "07:00 PM", type: "Non-AC", water: true, price: "₹350" },
+        { name: "Sharma Travels AC", time: "09:30 PM", type: "AC", water: true, price: "₹520" },
+        { name: "Maharaja AC Sleeper", time: "11:00 PM", type: "AC", water: true, price: "₹580" }
+    ]
+    
+    // Filter buses based on user requirements
+    let availableBuses = [...allBuses]
+    
+    if (needsAC) {
+        availableBuses = availableBuses.filter(bus => bus.type === "AC")
+    }
+    
+    if (needsWater) {
+        availableBuses = availableBuses.filter(bus => bus.water === true)
+    }
+    
+    // If no buses found
+    if (availableBuses.length === 0) {
+        return `Sorry, no ${needsAC ? 'AC ' : ''}buses found from ${from} to ${to}${needsWater ? ' with water facility' : ''}. Please try different preferences.`
+    }
+    
+    // Create response message
+    let response = `🚍 Available buses from ${from} to ${to}:\n\n`
+    
+    availableBuses.forEach((bus, index) => {
+        response += `${index + 1}. ${bus.name}\n`
+        response += `   ⏰ Time: ${bus.time}\n`
+        response += `   💺 Type: ${bus.type}\n`
+        response += `   💧 Water: ${bus.water ? '✓ Provided' : '✗ Not provided'}\n`
+        response += `   💰 Price: ${bus.price}\n\n`
+    })
+    
+    response += `To book a ticket, please:\n`
+    response += `• Visit our website\n`
+    response += `• Click the WhatsApp button above\n`
+    response += `• Or call our helpline`
+    
+    return response
+}
+
     // Auto-reply responses
     const getAutoReply = (message) => {
-        const msg = message.toLowerCase()
+    const msg = message.toLowerCase()
+    
+    // Check if user is asking about buses
+    if ((msg.includes('bus') || msg.includes('route')) && (msg.includes('to') || msg.includes('from'))) {
+        // Try to find "from" and "to" cities
+        const words = message.split(' ')
+        let fromCity = ''
+        let toCity = ''
+        let foundTo = false
         
-        if (msg.includes('cancel') || msg.includes('refund')) {
-            return "You can cancel your booking from 'My Bookings' page. Refund will be processed as per our cancellation policy. Would you like me to help you with that?"
+        for (let i = 0; i < words.length; i++) {
+            if (words[i].toLowerCase() === 'from' && words[i+1]) {
+                fromCity = words[i+1]
+            }
+            if (words[i].toLowerCase() === 'to' && words[i+1]) {
+                toCity = words[i+1]
+                foundTo = true
+            }
+            if (!foundTo && words[i].toLowerCase() === 'rajahmundry') {
+                fromCity = 'Rajahmundry'
+            }
+            if (words[i].toLowerCase() === 'tanuku') {
+                toCity = 'Tanuku'
+            }
         }
-        if (msg.includes('ticket') || msg.includes('download')) {
-            return "Your ticket is available in 'My Bookings' section. You can download PDF ticket from there."
+        
+        // Check if they want AC or water
+        const needsAC = msg.includes('ac') || msg.includes('air conditioned')
+        const needsWater = msg.includes('water')
+        
+        // Return bus information
+        if (fromCity && toCity) {
+            return getBusInfo(fromCity, toCity, needsAC, needsWater)
+        } else {
+            return "Please tell me your source and destination. Example: 'buses from Rajahmundry to Tanuku'"
         }
-        if (msg.includes('payment') || msg.includes('pay')) {
-            return "We accept all major cards, UPI, Net Banking, and wallets through our secure Razorpay payment gateway."
-        }
-        if (msg.includes('seat') || msg.includes('change')) {
-            return "Seat changes aren't possible after booking. You can cancel and rebook if needed."
-        }
-        if (msg.includes('hello') || msg.includes('hi')) {
-            return "Hello! Welcome to BusTravels support. How can I help you today?"
-        }
-        if (msg.includes('thank')) {
-            return "You're welcome! Is there anything else I can help you with?"
-        }
-        return null
     }
-
+    
+    // Keep your existing replies for other questions
+    if (msg.includes('cancel') || msg.includes('refund')) {
+        return "You can cancel your booking from 'My Bookings' page. Refund will be processed as per our cancellation policy. Would you like me to help you with that?"
+    }
+    if (msg.includes('ticket') || msg.includes('download')) {
+        return "Your ticket is available in 'My Bookings' section. You can download PDF ticket from there."
+    }
+    if (msg.includes('payment') || msg.includes('pay')) {
+        return "We accept all major cards, UPI, Net Banking, and wallets through our secure Razorpay payment gateway."
+    }
+    if (msg.includes('seat') || msg.includes('change')) {
+        return "Seat changes aren't possible after booking. You can cancel and rebook if needed."
+    }
+    if (msg.includes('hello') || msg.includes('hi')) {
+        return "Hello! Welcome to BusTravels support. How can I help you today? You can ask about bus routes, AC buses, water facilities, etc."
+    }
+    if (msg.includes('thank')) {
+        return "You're welcome! Is there anything else I can help you with?"
+    }
+    
+    return null
+}
     const sendMessage = async () => {
         if (!inputMessage.trim()) return
 
