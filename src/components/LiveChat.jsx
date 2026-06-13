@@ -161,16 +161,16 @@ const LiveChat = () => {
 
     const handleWhatsAppChat = () => {
         // Replace with your WhatsApp number
-        const whatsappNumber = '919876543210' // Change to your number
+        const whatsappNumber = '919502219129' // Change to your number
         window.open(`https://wa.me/${whatsappNumber}?text=Hello! I need help with my bus booking.`, '_blank')
     }
 
     const handlePhoneCall = () => {
-        window.location.href = 'tel:+919876543210'
+        window.location.href = 'tel:+919502219129'
     }
 
     const handleEmailSupport = () => {
-        window.location.href = 'mailto:support@bustravels.com'
+        window.location.href = 'mailto:sparkybuzzing64@gmail.com'
     }
 
     const handleFAQClick = (faq) => {
@@ -196,7 +196,7 @@ const LiveChat = () => {
     }
 
     return (
-        <div className={`fixed bottom-6 right-6 bg-white rounded-2xl shadow-2xl transition-all duration-300 z-50 ${isMinimized ? 'w-80' : 'w-96'} h-${isMinimized ? '14' : '140'}`}>
+        <div className={`fixed bottom-6 right-6 bg-white rounded-2xl shadow-2xl transition-all duration-300 z-50 ${isMinimized ? 'w-80 h-14' : 'w-96 h-[560px]'}`}>
             {/* Chat Header */}
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-t-2xl flex justify-between items-center">
                 <div>
@@ -264,7 +264,7 @@ const LiveChat = () => {
                     )}
 
                     {/* Chat Messages */}
-                    <div className="h-96 overflow-y-auto p-4 space-y-3">
+                    <div className={`${isMinimized ? 'h-0' : 'h-96'} overflow-y-auto p-4 space-y-3`}>
                         {/* Welcome Message */}
                         <div className="flex justify-start">
                             <div className="bg-gray-100 rounded-lg p-3 max-w-[80%]">
