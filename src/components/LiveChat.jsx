@@ -23,9 +23,12 @@ const LiveChat = () => {
     const sendToGroq = async (userMessage) => {
         const apiKey = import.meta.env.VITE_GROQ_API_KEY
         
+        // Debug log - REMOVE AFTER TESTING
+        console.log('API Key present:', !!apiKey, 'Key start:', apiKey?.substring(0, 10))
+
         // Check if API key is available
-        if (!apiKey) {
-            console.error('Groq API key is missing!')
+        if (!apiKey || apiKey === 'undefined') {
+            console.error('Groq API key is missing or invalid!')
             return "Sorry, the AI service is not configured. Please contact support or use WhatsApp for help."
         }
 
@@ -41,14 +44,7 @@ const LiveChat = () => {
                     messages: [
                         {
                             role: 'system',
-                            content: `You are a bus travel assistant for BusTravels. Help users with:
-                            - Bus routes (Vizag-Hyderabad, Vizag-Rajahmundry, Rajahmundry-Tanuku)
-                            - Cancellation and refund policies
-                            - Ticket booking and download
-                            - Seat changes
-                            - Payment methods
-                            
-                            Keep answers VERY SHORT and CONCISE (max 2-3 sentences).`
+                            content: `You are a bus travel assistant for BusTravels. Keep answers VERY SHORT and CONCISE (max 2-3 sentences).`
                         },
                         {
                             role: 'user',
@@ -61,9 +57,16 @@ const LiveChat = () => {
             })
 
             if (!response.ok) {
-                const errorData = await response.json()
-                console.error('API Error:', errorData)
-                return "Sorry, I'm having trouble right now. Please try again or contact WhatsApp support."
+                // Try to get the error message from Groq
+                let errorDetail = 'Unknown error'
+                try {
+                    const errorData = await response.json()
+                    errorDetail = errorData.error?.message || JSON.stringify(errorData)
+                } catch (e) {
+                    errorDetail = `HTTP ${response.status}: ${response.statusText}`
+                }
+                console.error('Groq API Error:', errorDetail)
+                return `Sorry, I'm having trouble right now. Please try again or contact WhatsApp support.`
             }
 
             const data = await response.json()
@@ -75,8 +78,8 @@ const LiveChat = () => {
             
             return data.choices[0].message.content
         } catch (error) {
-            console.error('AI API error:', error)
-            return "Sorry, having trouble connecting. Please try again or contact us on WhatsApp."
+            console.error('Network or fetch error:', error)
+            return "Sorry, I'm having trouble connecting. Please check your internet and try again."
         }
     }
 
